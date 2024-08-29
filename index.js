@@ -1,6 +1,6 @@
 const express = require('express')
 require('dotenv').config();
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId, CURSOR_FLAGS } = require('mongodb');
 const cors = require('cors');
 const app = express()
 const port = process.env.PORT || 5000;
@@ -54,6 +54,14 @@ async function run() {
             res.send(result)
         })
 
+
+        // added the product related api
+        app.post('/addProduct', async (req, res) => {
+            const product = req.body;
+            console.log(product)
+            const result = await categoryCollection.insertOne(product)
+            res.send(result)
+        })
 
         // cart related api
         app.get('/read-carts', async (req, res) => {
