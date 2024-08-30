@@ -29,7 +29,7 @@ async function run() {
 
         const brandCollection = client.db('foodixDb').collection('brand')
         const categoryCollection = client.db('foodixDb').collection('category')
-        const addProductCollection = client.db('foodixDb').collection('addProduct')
+        // const addProductCollection = client.db('foodixDb').collection('addProduct')
         const cartsCollection = client.db('foodixDb').collection('carts')
 
 
@@ -58,7 +58,6 @@ async function run() {
         // added the product related api
         app.post('/addProduct', async (req, res) => {
             const product = req.body;
-            console.log(product)
             const result = await categoryCollection.insertOne(product)
             res.send(result)
         })
@@ -66,19 +65,17 @@ async function run() {
         // cart related api
         app.get('/read-carts', async (req, res) => {
             const email = req.query.email;
-            // console.log('email', email);
             let query = {}
             if (email) {
                 query = { email: email }
             }
-            console.log(query);
+            // console.log(query);
             const result = await cartsCollection.find(query).toArray()
             res.send(result)
         })
 
         app.post('/added-carts', async (req, res) => {
             const product = req.body;
-            console.log('added product', product);
             const result = await cartsCollection.insertOne(product)
             res.send(result)
 
@@ -88,6 +85,27 @@ async function run() {
         // all product api
         app.get('/allProduct', async (req, res) => {
             const result = await categoryCollection.find().toArray()
+            res.send(result)
+        })
+
+        app.get('/read-singleProduct/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await categoryCollection.findOne(query)
+            res.send(result)
+        })
+
+        app.put('/product-update/:id', async (req, res) => {
+            const product = req.body;
+            // console.log(product);
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const updateDoc = {
+                $set: {
+                    ...product
+                }
+            }
+            const result = await categoryCollection.updateOne(filter, updateDoc)
             res.send(result)
         })
 
