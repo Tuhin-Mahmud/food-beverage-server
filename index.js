@@ -57,8 +57,8 @@ async function run() {
 
         // added the product related api
         app.post('/addProduct', async (req, res) => {
-            const product = req.body;
-            const result = await categoryCollection.insertOne(product)
+            const foodProduct = req.body;
+            const result = await categoryCollection.insertOne(foodProduct)
             res.send(result)
         })
 
@@ -69,7 +69,7 @@ async function run() {
             if (email) {
                 query = { email: email }
             }
-            // console.log(query);
+
             const result = await cartsCollection.find(query).toArray()
             res.send(result)
         })
