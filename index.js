@@ -32,6 +32,9 @@ async function run() {
         const categoryCollection = client.db('foodixDb').collection('category')
         // const addProductCollection = client.db('foodixDb').collection('addProduct')
         const cartsCollection = client.db('foodixDb').collection('carts')
+        const menuCollection = client.db('foodixDb').collection('menu')
+        const commentCollection = client.db('foodixDb').collection('comment')
+        // const cartsCollection = client.db('foodixDb').collection('carts')
 
 
 
@@ -116,6 +119,44 @@ async function run() {
             const result = await categoryCollection.updateOne(filter, updateDoc)
             res.send(result)
         })
+
+        // menu related api
+        app.get('/menu', async (req, res) => {
+            const result = await menuCollection.find().toArray()
+            res.send(result)
+        })
+
+        app.get('/menu/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await menuCollection.findOne(query)
+            res.send(result)
+        })
+
+        // comment
+        app.post('/comment', async (req, res) => {
+            const comment = req.body;
+            const result = await commentCollection.insertOne(comment)
+            res.send(result)
+        })
+
+        app.get('/comment', async (req, res) => {
+            // const email = req.query.email;
+            // console.log(email);
+            // let query = {};
+            // if (email) {
+            //     query = { email: email }
+            // }
+            const result = await commentCollection.find().toArray()
+            res.send(result)
+        })
+
+        // // carts related api
+        // app.post('/carts', async (req, res) => {
+        //     const cart = req.body;
+        //     const result = await cartsCollection.insertOne(cart)
+        //     res.send(result)
+        // })
 
 
         // Send a ping to confirm a successful connection
