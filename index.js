@@ -35,6 +35,7 @@ async function run() {
         const menuCollection = client.db('foodixDb').collection('menu')
         const commentCollection = client.db('foodixDb').collection('comment')
         // const cartsCollection = client.db('foodixDb').collection('carts')
+        const reservationCollection = client.db('foodixDb').collection('reservation')
 
 
 
@@ -151,12 +152,41 @@ async function run() {
             res.send(result)
         })
 
+
+
         // // carts related api
         // app.post('/carts', async (req, res) => {
         //     const cart = req.body;
         //     const result = await cartsCollection.insertOne(cart)
         //     res.send(result)
         // })
+
+
+        // reservation related api
+
+        app.post('/reservation', async (req, res) => {
+            const reservation = req.body;
+            // console.log(reservation);
+            const result = await reservationCollection.insertOne(reservation)
+            res.send(result)
+        })
+
+        app.get('/reservation', async (req, res) => {
+            const email = req.query.email;
+            let query = {};
+            if (email) {
+                query = { email: email }
+            }
+            const result = await reservationCollection.find(query).toArray()
+            res.send(result)
+        })
+
+        app.delete('/reservation/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await reservationCollection.deleteOne(query)
+            res.send(result)
+        })
 
 
         // Send a ping to confirm a successful connection
